@@ -29,7 +29,7 @@ jsonData <- jsonlite::fromJSON("https://api.github.com/users/jtleek/repos")
 
 created_on <- cbind(jsonData$name, jsonData$created_at)
 colnames(created_on) <- c("repo", "created on")
-datasharing_created_on <- subset(created_on, created_on[, 1] == "datasharing")
+q1 <- subset(created_on, created_on[, 1] == "datasharing")
 
 
 # Question 2:  The sqldf package allows for execution of SQL commands on R 
@@ -51,7 +51,7 @@ acs <- read.csv("acs.csv", header = T)
 # Question 3:  Using the same data frame you created in the previous problem, what is the equivalent
 # function to unique(acs$AGEP)
 
-# Answer: sqldf("select distinct AGEP from acs")
+q3 <- "Answer: sqldf(\"select distinct AGEP from acs\")"
 
 
 # Question 4:  How many characters are in the 10th, 20th, and 100th lines of HTML from this page
@@ -78,8 +78,10 @@ file5 <- download.file(url5, "file5.for", method = "curl")
 install.packages("foreign")
 library("foreign")
 
-noaa <- read.fwf("file5.for", widths = c(10, 3, 5, 5, 5, 5, 5, 5, 5), skip = 3, sep = "\t", header)
-noaa[, -c(2)]
+noaa <- read.fwf("file5.for", widths = c(15, 4, 4, 5, 4, 5), sep = "\t", header = F, skip = 4)
+head(noaa)
 
+q5 <- sum(noaa$V5)
 
+print(list(q1, q3, q4, q5))
 
