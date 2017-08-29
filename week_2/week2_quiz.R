@@ -19,13 +19,13 @@ github_token <- oauth2.0_token(oauth_endpoints("github"), myapp)
 
 gtoken <- config(token = github_token)
 
-req <- GET("https://api.github.com/users/jtleek/repos", gtoken)
+req <- GET("https://api.github.com/users/jfer2pi/repos", gtoken)
 
 stop_for_status(req)
 content(req)
 
 json1 <- content(req)
-jsonData <- jsonlite::fromJSON("https://api.github.com/users/jtleek/repos")
+jsonData <- jsonlite::fromJSON("https://api.github.com/jfer2pi/jtleek/repos")
 
 created_on <- cbind(jsonData$name, jsonData$created_at)
 colnames(created_on) <- c("repo", "created on")
