@@ -1,27 +1,62 @@
 Getting and Cleaning Data: Week 3 Quiz
 ================
 
-GitHub Documents
-----------------
+Question 1
+----------
 
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+The American Community Survey distributes downloadable data about United States communities. Download the 2006 microdata survey about housing for the state of Idaho using download.file() from here:
 
-Including Code
---------------
+<https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv>
 
-You can include R code in the document as follows:
+and load the data into R. The code book, describing the variable names is here:
+
+<https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf>
+
+Create a logical vector that identifies the households on greater than 10 acres who sold more than $10,000 worth of agriculture products. Assign that logical vector to the variable agricultureLogical. Apply the which() function like this to identify the rows of the data frame where the logical vector is TRUE.
+
+which(agricultureLogical)
+
+What are the first 3 values that result?
+
+##### Set the working directory:
 
 ``` r
-summary(cars)
+setwd("/Users/fer/Dropbox/Coursera DS/Getting_Cleaning_Data/week_3")
 ```
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
+##### Download file and create a logical vector where ACR = 3 and AGS = 6:
+
+``` r
+url1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
+#conn1 <- download.file(url1, "idaho.csv", method = "curl")
+
+file1 <- read.csv("idaho.csv", header = T)
+file1 <- tbl_df(file1)
+agricultureLogical <- (file1$ACR == 3 & file1$AGS == 6)
+q1 <- which(agricultureLogical)[1:3]
+```
+
+##### Answer to Question 1:
+
+``` r
+q1
+```
+
+    ## [1] 125 238 262
+
+Question 2
+----------
+
+Using the jpeg package read in the following picture of your instructor into R
+
+<https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg>
+
+Use the parameter native=TRUE. What are the 30th and 80th quantiles of the resulting data? (some Linux systems may produce an answer 638 different for the 30th quantile)
+
+``` r
+url2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg"
+conn2 <- download.file(url2, "jeff.jpg", method = "curl")
+```
 
 Including Plots
 ---------------

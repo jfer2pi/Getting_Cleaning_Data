@@ -5,18 +5,69 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr, jpeg)
+
+```
+## Question 1
+
+The American Community Survey distributes downloadable data about United States communities. 
+Download the 2006 microdata survey about housing for the state of Idaho using download.file() from here:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv
+
+and load the data into R. The code book, describing the variable names is here:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf
+
+Create a logical vector that identifies the households on greater than 10 acres who sold more than $10,000 worth of agriculture products. Assign that logical vector to the variable agricultureLogical. Apply the which() function like this to identify the rows of the data frame where the logical vector is TRUE.
+
+which(agricultureLogical)
+
+What are the first 3 values that result?
+
+##### Set the working directory:
+
+```{r setwd, echo=TRUE}
+setwd("/Users/fer/Dropbox/Coursera DS/Getting_Cleaning_Data/week_3")
 ```
 
-## GitHub Documents
+##### Download file and create a logical vector where ACR = 3 and AGS = 6:
 
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+```{r download1, echo=TRUE}
 
-## Including Code
+url1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
+#conn1 <- download.file(url1, "idaho.csv", method = "curl")
 
-You can include R code in the document as follows:
+file1 <- read.csv("idaho.csv", header = T)
+file1 <- tbl_df(file1)
+agricultureLogical <- (file1$ACR == 3 & file1$AGS == 6)
+q1 <- which(agricultureLogical)[1:3]
 
-```{r cars, echo=TRUE}
-summary(cars)
+```
+
+##### Answer to Question 1:  
+
+```{r answer1, echo=TRUE}
+
+q1
+
+```
+
+## Question 2
+
+Using the jpeg package read in the following picture of your instructor into R
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg
+
+Use the parameter native=TRUE. What are the 30th and 80th quantiles of the resulting data? 
+(some Linux systems may produce an answer 638 different for the 30th quantile)
+
+``` {r download2, echo=TRUE}
+
+url2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg"
+# conn2 <- download.file(url2, "jeff.jpg", method = "curl")
+readJPEG(conn2, native = TRUE)
+
 ```
 
 ## Including Plots
