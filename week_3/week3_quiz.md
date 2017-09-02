@@ -56,13 +56,14 @@ Use the parameter native=TRUE. What are the 30th and 80th quantiles of the resul
 ``` r
 url2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg"
 conn2 <- download.file(url2, "jeff.jpg", method = "curl")
+jeff <- readJPEG("jeff.jpg", native = TRUE)
+
+qwant <- c(0.3, 0.8)
+q2 <- quantile(jeff, qwant)
+q2
 ```
 
-Including Plots
----------------
-
-You can also embed plots, for example:
-
-![](week3_quiz_files/figure-markdown_github/pressure-1.png)
+    ##       30%       80% 
+    ## -15259150 -10575416
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
