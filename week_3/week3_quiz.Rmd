@@ -92,12 +92,20 @@ edufile <- read.csv("edu.csv", header = T)
 head(gdpfile)
 head(edufile)
 
-gdpfile <- gdpfile %>% tbl_df() %>% select(X, X.1, X.3, X.4) 
-colnames(gdpfile) <- c("CountryCode","Ranking", "Long.Name", "GDP")
-head(gdpfile)
-edufile <- edufile %>% tbl_df()
+gdpfilesel <- gdpfile %>% tbl_df() %>% 
+    select(X, X.1, X.3, X.4) 
 
-mergeData <- merge(gdpfile, edufile, by = "CountryCode")
-head(mergeData)
+colnames(gdpfilesel) <- c("CountryCode","Ranking", "Long.Name", "GDP")
+
+edufile <- edufile %>% tbl_df()
+gdpmerge <- gdpfilesel %>% merge(edufile, by = "CountryCode") %>%
+    tbl_df() %>% 
+    filter(Ranking != "") %>%
+    mutate(GDP = gsub(",","",GDP)) %>%
+    mutate(GDP = as.numeric(GDP)) %>%
+    arrange(GDP)
+
+q3 <- gdpmerge[13, ]
+q3
 
 ```
