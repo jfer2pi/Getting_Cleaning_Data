@@ -28,7 +28,7 @@ setwd("/Users/fer/Dropbox/Coursera DS/Getting_Cleaning_Data/week_3")
 
 ``` r
 url1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
-#conn1 <- download.file(url1, "idaho.csv", method = "curl")
+conn1 <- download.file(url1, "idaho.csv", method = "curl")
 
 file1 <- read.csv("idaho.csv", header = T)
 file1 <- tbl_df(file1)
@@ -73,262 +73,52 @@ urledu <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Countr
 congdp <- download.file(urlgdp, "gdp.csv", method = "curl")
 conedu <- download.file(urledu, "edu.csv", method = "curl")
 
-gdpfile <- read.csv("gdp.csv", header = T, skip = 4)
+gdpfile <- read.csv("gdp.csv", header = T, skip = 4, nrows = 215)
 edufile <- read.csv("edu.csv", header = T)
-head(gdpfile)
-```
+#head(gdpfile)
+#head(edufile)
 
-    ##     X X.1 X.2            X.3          X.4 X.5 X.6 X.7 X.8 X.9
-    ## 1 USA   1  NA  United States  16,244,600       NA  NA  NA  NA
-    ## 2 CHN   2  NA          China   8,227,103       NA  NA  NA  NA
-    ## 3 JPN   3  NA          Japan   5,959,718       NA  NA  NA  NA
-    ## 4 DEU   4  NA        Germany   3,428,131       NA  NA  NA  NA
-    ## 5 FRA   5  NA         France   2,612,878       NA  NA  NA  NA
-    ## 6 GBR   6  NA United Kingdom   2,471,784       NA  NA  NA  NA
+gdpfilesel <- gdpfile %>% tbl_df() %>% 
+    select(X, X.1, X.3, X.4) 
 
-``` r
-head(edufile)
-```
+colnames(gdpfilesel) <- c("CountryCode","Ranking", "Long.Name", "GDP")
 
-    ##   CountryCode                    Long.Name         Income.Group
-    ## 1         ABW                        Aruba High income: nonOECD
-    ## 2         ADO      Principality of Andorra High income: nonOECD
-    ## 3         AFG Islamic State of Afghanistan           Low income
-    ## 4         AGO  People's Republic of Angola  Lower middle income
-    ## 5         ALB          Republic of Albania  Upper middle income
-    ## 6         ARE         United Arab Emirates High income: nonOECD
-    ##                       Region Lending.category Other.groups  Currency.Unit
-    ## 1  Latin America & Caribbean                                Aruban florin
-    ## 2      Europe & Central Asia                                         Euro
-    ## 3                 South Asia              IDA         HIPC Afghan afghani
-    ## 4         Sub-Saharan Africa              IDA              Angolan kwanza
-    ## 5      Europe & Central Asia             IBRD                Albanian lek
-    ## 6 Middle East & North Africa                                U.A.E. dirham
-    ##   Latest.population.census  Latest.household.survey
-    ## 1                     2000                         
-    ## 2           Register based                         
-    ## 3                     1979               MICS, 2003
-    ## 4                     1970 MICS, 2001, MIS, 2006/07
-    ## 5                     2001               MICS, 2005
-    ## 6                     2005                         
-    ##                                                                 Special.Notes
-    ## 1                                                                            
-    ## 2                                                                            
-    ## 3 Fiscal year end: March 20; reporting period for national accounts data: FY.
-    ## 4                                                                            
-    ## 5                                                                            
-    ## 6                                                                            
-    ##   National.accounts.base.year National.accounts.reference.year
-    ## 1                        1995                               NA
-    ## 2                                                           NA
-    ## 3                   2002/2003                               NA
-    ## 4                        1997                               NA
-    ## 5                                                         1996
-    ## 6                        1995                               NA
-    ##   System.of.National.Accounts SNA.price.valuation
-    ## 1                          NA                    
-    ## 2                          NA                    
-    ## 3                          NA                 VAB
-    ## 4                          NA                 VAP
-    ## 5                        1993                 VAB
-    ## 6                          NA                 VAB
-    ##   Alternative.conversion.factor PPP.survey.year
-    ## 1                                            NA
-    ## 2                                            NA
-    ## 3                                            NA
-    ## 4                       1991-96            2005
-    ## 5                                          2005
-    ## 6                                            NA
-    ##   Balance.of.Payments.Manual.in.use External.debt.Reporting.status
-    ## 1                                                                 
-    ## 2                                                                 
-    ## 3                                                           Actual
-    ## 4                              BPM5                         Actual
-    ## 5                              BPM5                         Actual
-    ## 6                              BPM4                               
-    ##   System.of.trade Government.Accounting.concept
-    ## 1         Special                              
-    ## 2         General                              
-    ## 3         General                  Consolidated
-    ## 4         Special                              
-    ## 5         General                  Consolidated
-    ## 6         General                  Consolidated
-    ##   IMF.data.dissemination.standard
-    ## 1                                
-    ## 2                                
-    ## 3                            GDDS
-    ## 4                            GDDS
-    ## 5                            GDDS
-    ## 6                            GDDS
-    ##   Source.of.most.recent.Income.and.expenditure.data
-    ## 1                                                  
-    ## 2                                                  
-    ## 3                                                  
-    ## 4                                         IHS, 2000
-    ## 5                                        LSMS, 2005
-    ## 6                                                  
-    ##   Vital.registration.complete Latest.agricultural.census
-    ## 1                                                       
-    ## 2                         Yes                           
-    ## 3                                                       
-    ## 4                                                1964-65
-    ## 5                         Yes                       1998
-    ## 6                                                   1998
-    ##   Latest.industrial.data Latest.trade.data Latest.water.withdrawal.data
-    ## 1                     NA              2008                           NA
-    ## 2                     NA              2006                           NA
-    ## 3                     NA              2008                         2000
-    ## 4                     NA              1991                         2000
-    ## 5                   2005              2008                         2000
-    ## 6                     NA              2008                         2005
-    ##   X2.alpha.code WB.2.code           Table.Name           Short.Name
-    ## 1            AW        AW                Aruba                Aruba
-    ## 2            AD        AD              Andorra              Andorra
-    ## 3            AF        AF          Afghanistan          Afghanistan
-    ## 4            AO        AO               Angola               Angola
-    ## 5            AL        AL              Albania              Albania
-    ## 6            AE        AE United Arab Emirates United Arab Emirates
-
-``` r
-gdpfile <- gdpfile %>% tbl_df() %>% select(X, X.1, X.3, X.4) 
-colnames(gdpfile) <- c("CountryCode","Ranking", "Long.Name", "GDP")
-head(gdpfile)
-```
-
-    ## # A tibble: 6 x 4
-    ##   CountryCode Ranking      Long.Name          GDP
-    ##        <fctr>  <fctr>         <fctr>       <fctr>
-    ## 1         USA       1  United States  16,244,600 
-    ## 2         CHN       2          China   8,227,103 
-    ## 3         JPN       3          Japan   5,959,718 
-    ## 4         DEU       4        Germany   3,428,131 
-    ## 5         FRA       5         France   2,612,878 
-    ## 6         GBR       6 United Kingdom   2,471,784
-
-``` r
 edufile <- edufile %>% tbl_df()
-
-gdpmerge <- gdpfile %>% merge(edufile, by = "CountryCode") %>%
-    filter(GDP != "") %>%
+gdpmerge <- gdpfilesel %>% merge(edufile, by = "CountryCode") %>%
+    tbl_df() %>% 
+    filter(Ranking != "") %>%
+    mutate(GDP = gsub(",","",GDP)) %>%
     mutate(GDP = as.numeric(GDP)) %>%
-    arrange(desc(GDP))
+    arrange(GDP)
 ```
 
     ## Warning: package 'bindrcpp' was built under R version 3.2.5
 
 ``` r
-gdpmerge[c(10:15),]
+q3 <- gdpmerge[13, 3]
+q3
 ```
 
-    ##    CountryCode Ranking                  Long.Name.x GDP
-    ## 10         EMU                            Euro area 196
-    ## 11         EAP                  East Asia & Pacific 195
-    ## 12         ECA                Europe & Central Asia 194
-    ## 13         MNA           Middle East & North Africa 193
-    ## 14         SSA                   Sub-Saharan Africa 192
-    ## 15         ADO                              Andorra 191
-    ##                                     Long.Name.y         Income.Group
-    ## 10                                    Euro area                     
-    ## 11        East Asia & Pacific (developing only)                     
-    ## 12      Europe & Central Asia (developing only)                     
-    ## 13 Middle East & North Africa (developing only)                     
-    ## 14         Sub-Saharan Africa (developing only)                     
-    ## 15                      Principality of Andorra High income: nonOECD
-    ##                   Region Lending.category Other.groups Currency.Unit
-    ## 10                                                                  
-    ## 11                                                                  
-    ## 12                                                                  
-    ## 13                                                                  
-    ## 14                                                                  
-    ## 15 Europe & Central Asia                                        Euro
-    ##    Latest.population.census Latest.household.survey
-    ## 10                                                 
-    ## 11                                                 
-    ## 12                                                 
-    ## 13                                                 
-    ## 14                                                 
-    ## 15           Register based                        
-    ##                                                                                Special.Notes
-    ## 10                                                                      Euro area aggregate.
-    ## 11        East Asia and Pacific regional aggregate (does not include high-income economies).
-    ## 12      Europe and Central Asia regional aggregate (does not include high-income economies).
-    ## 13 Middle East and North Africa regional aggregate (does not include high-income economies).
-    ## 14           Sub-Saharan Africa regional aggregate (does not include high-income economies).
-    ## 15                                                                                          
-    ##    National.accounts.base.year National.accounts.reference.year
-    ## 10                                                           NA
-    ## 11                                                           NA
-    ## 12                                                           NA
-    ## 13                                                           NA
-    ## 14                                                           NA
-    ## 15                                                           NA
-    ##    System.of.National.Accounts SNA.price.valuation
-    ## 10                          NA                    
-    ## 11                          NA                    
-    ## 12                          NA                    
-    ## 13                          NA                    
-    ## 14                          NA                    
-    ## 15                          NA                    
-    ##    Alternative.conversion.factor PPP.survey.year
-    ## 10                                            NA
-    ## 11                                            NA
-    ## 12                                            NA
-    ## 13                                            NA
-    ## 14                                            NA
-    ## 15                                            NA
-    ##    Balance.of.Payments.Manual.in.use External.debt.Reporting.status
-    ## 10                                                                 
-    ## 11                                                                 
-    ## 12                                                                 
-    ## 13                                                                 
-    ## 14                                                                 
-    ## 15                                                                 
-    ##    System.of.trade Government.Accounting.concept
-    ## 10                                              
-    ## 11                                              
-    ## 12                                              
-    ## 13                                              
-    ## 14                                              
-    ## 15         General                              
-    ##    IMF.data.dissemination.standard
-    ## 10                                
-    ## 11                                
-    ## 12                                
-    ## 13                                
-    ## 14                                
-    ## 15                                
-    ##    Source.of.most.recent.Income.and.expenditure.data
-    ## 10                                                  
-    ## 11                                                  
-    ## 12                                                  
-    ## 13                                                  
-    ## 14                                                  
-    ## 15                                                  
-    ##    Vital.registration.complete Latest.agricultural.census
-    ## 10                                                       
-    ## 11                                                       
-    ## 12                                                       
-    ## 13                                                       
-    ## 14                                                       
-    ## 15                         Yes                           
-    ##    Latest.industrial.data Latest.trade.data Latest.water.withdrawal.data
-    ## 10                     NA                NA                           NA
-    ## 11                     NA                NA                           NA
-    ## 12                     NA                NA                           NA
-    ## 13                     NA                NA                           NA
-    ## 14                     NA                NA                           NA
-    ## 15                     NA              2006                           NA
-    ##    X2.alpha.code WB.2.code                 Table.Name
-    ## 10                                          Euro area
-    ## 11                                East Asia & Pacific
-    ## 12                              Europe & Central Asia
-    ## 13                         Middle East & North Africa
-    ## 14                                 Sub-Saharan Africa
-    ## 15            AD        AD                    Andorra
-    ##                                      Short.Name
-    ## 10                                    Euro area
-    ## 11        East Asia & Pacific (developing only)
-    ## 12      Europe & Central Asia (developing only)
-    ## 13 Middle East & North Africa (developing only)
-    ## 14         Sub-Saharan Africa (developing only)
-    ## 15                                      Andorra
+    ## # A tibble: 1 x 1
+    ##           Long.Name.x
+    ##                <fctr>
+    ## 1 St. Kitts and Nevis
+
+``` r
+avgs <- gdpfilesel %>% merge(edufile, by = "CountryCode") %>%
+    tbl_df() %>% 
+    #filter(Ranking != "") %>%
+    group_by(Income.Group) %>%
+    summarize(avg = mean(as.numeric(Ranking), na.rm = T))
+
+avgs
+```
+
+    ## # A tibble: 5 x 2
+    ##           Income.Group       avg
+    ##                 <fctr>     <dbl>
+    ## 1 High income: nonOECD  91.91304
+    ## 2    High income: OECD  32.96667
+    ## 3           Low income 133.72973
+    ## 4  Lower middle income 107.70370
+    ## 5  Upper middle income  92.13333

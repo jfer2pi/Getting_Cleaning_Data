@@ -39,7 +39,7 @@ setwd("/Users/fer/Dropbox/Coursera DS/Getting_Cleaning_Data/week_3")
 ```{r download1, echo=TRUE}
 
 url1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
-#conn1 <- download.file(url1, "idaho.csv", method = "curl")
+conn1 <- download.file(url1, "idaho.csv", method = "curl")
 
 file1 <- read.csv("idaho.csv", header = T)
 file1 <- tbl_df(file1)
@@ -87,25 +87,45 @@ urledu <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Countr
 congdp <- download.file(urlgdp, "gdp.csv", method = "curl")
 conedu <- download.file(urledu, "edu.csv", method = "curl")
 
-gdpfile <- read.csv("gdp.csv", header = T, skip = 4)
+gdpfile <- read.csv("gdp.csv", header = T, skip = 4, nrows = 215)
 edufile <- read.csv("edu.csv", header = T)
-head(gdpfile)
-head(edufile)
+#head(gdpfile)
+#head(edufile)
 
-gdpfilesel <- gdpfile %>% tbl_df() %>% 
-    select(X, X.1, X.3, X.4) 
+gdpfilesel <- gdpfile %>% 
+    tbl_df() %>% 
+    select(X, X.1, X.3, X.4) %>%
+    rename(X = "CountryCode", X.1 = "Ranking", X.3 = "Long.Name", X.4 = "GDP")
 
-colnames(gdpfilesel) <- c("CountryCode","Ranking", "Long.Name", "GDP")
+edufile <- edufile %>% 
+    tbl_df()
 
-edufile <- edufile %>% tbl_df()
 gdpmerge <- gdpfilesel %>% merge(edufile, by = "CountryCode") %>%
     tbl_df() %>% 
     filter(Ranking != "") %>%
     mutate(GDP = gsub(",","",GDP)) %>%
     mutate(GDP = as.numeric(GDP)) %>%
+    mutate(Ranking = as.numeric(Ranking)) %>%
     arrange(GDP)
 
-q3 <- gdpmerge[13, ]
+q <- nrow(gdpmerge)
+q
+
+q3 <- gdpmerge[13, 3]
 q3
 
+avgs <- gdpmerge %>%
+    group_by(Income.Group) %>%
+    summarize(avg = mean(as.numeric(Ranking), na.rm = T))
+
+avgs
+
+splits <- gdpmerge$Ranking %>% quantile(probs = seq(0, 1, 0.2), na.rm = T)
+splitgdp <- gdpmerge %>%
+    mutate(Ranking = cut(Ranking, breaks = splits)) %>%
+    filter(Income.Group == "Lower middle income") %>% 
+    select(Ranking) %>% 
+    table()
+
+splitgdp
 ```
