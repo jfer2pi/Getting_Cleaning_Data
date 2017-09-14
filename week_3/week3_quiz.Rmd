@@ -123,7 +123,7 @@ gdpfilesel <- gdpfile %>%
     select(X, X.1, X.3, X.4)
 
 colnames(gdpfilesel) <- c("CountryCode", "Ranking", "Long.Name", "GDP")
-    
+
 # Transform edu file into a tbldf
 edufile <- edufile %>% 
     tbl_df()

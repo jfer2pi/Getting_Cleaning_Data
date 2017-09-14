@@ -1,0 +1,97 @@
+---
+title: "Week 4 Quiz"
+author: "Fernando Rodriguez"
+date: "9/9/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r question1, echo=TRUE}
+
+setwd("~/Dropbox/Coursera DS/Getting_Cleaning_Data/week_4")
+# Question 1
+install.packages("dplyr")
+library(dplyr)
+
+url1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
+file1 <- "acs.csv"
+
+if(!file.exists(file1)) {
+
+  download.file(url1, file1, method = "curl")
+}
+
+acsin <- read.csv(file1, header = TRUE)
+acsnames <- names(acsin)
+
+strsplit(acsnames, split = "wgtp")[123]
+
+# Question 2
+
+url2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
+file2 <- "gdp.csv"
+
+if(!file.exists(file2)) {
+  download.file(url2, file2, method = "curl")
+}
+
+gdp <- read.csv(file2, header = TRUE, skip = 4, nrows = 215)
+
+gdpsel <- gdp %>% 
+  tbl_df() %>%
+  select(X.3,X.4) 
+
+colnames(gdpsel) <- c("Economy", "GDP")
+
+gdps <- gdpsel %>% 
+  mutate(GDP = gsub(",","", GDP)) %>%
+  mutate(GDP = as.numeric(GDP))
+
+gdpavg <- mean(gdps$GDP, na.rm = TRUE)
+
+# Question 3
+
+ucount <- length(grep("^United",gdps$Economy))
+
+# Question 4
+
+url4 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv"
+file4 <- "edu.csv"
+
+if(!file.exists(file4)) {
+  download.file(url4, file4, method = "curl")
+}
+
+edu <- read.csv(file4, header = TRUE)
+
+edu <- edu %>%
+  tbl_df()
+
+eduf <- edu[grep("fiscal year end: june", edu$Special.Notes, ignore.case = TRUE) ,]
+nrow(eduf)
+
+# Question 5
+
+install.packages("quantmod")
+library(quantmod)
+
+
+amzn <- getSymbols("AMZN", auto.assign = FALSE)
+sampleTimes <- index(amzn)
+head(sampleTimes)
+
+install.packages("lubridate")
+library(lubridate)
+
+sampleTimes <- ymd(sampleTimes)
+val2012 <- length(sampleTimes[year(sampleTimes) == 2012])
+val2012
+val2012mon <- length(sampleTimes[year(sampleTimes) == 2012 & wday(sampleTimes, label = TRUE) == "Mon"])
+val2012mon
+
+
+
+```
