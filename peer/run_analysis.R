@@ -80,7 +80,7 @@ jointidy <- joinfinal %>%
     arrange(Subject, Activity)
 
 # Write tidy file as a CSV
-write_csv(jointidy, "UCI HAR Dataset/tidy.csv")
+write_csv(jointidy, "tidy.csv")
 
 
 
