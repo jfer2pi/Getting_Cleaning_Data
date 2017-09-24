@@ -42,4 +42,4 @@ tBodyAccJerkMean
 tBodyGyroMean
 tBodyGyroJerkMean
 
-The units of each measurement were normalized between [-1, 1], and are thus unitless.  Each parameter mean and standard deviation was summarized across Subject and Activity, where the mean for each activity and each subject was calculated.  This dataset is available in the tidy.csv file.
+The units of each measurement were normalized between [-1, 1], and are thus unitless.  Each parameter mean and standard deviation was summarized across Subject and Activity, where the mean for each activity and each subject was calculated.  This dataset is available in the tidy.txt file.
